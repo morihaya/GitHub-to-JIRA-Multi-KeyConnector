@@ -1,0 +1,108 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  width: 350px;
+  margin: 0;
+  padding: 0;
+  -webkit-text-size-adjust: 100%; /* Safari、iOSのサポート */
+  -ms-text-size-adjust: 100%;     /* Internet Explorer/Edgeのレガシーサポート */
+  text-size-adjust: 100%;         /* 標準プロパティ */
+}
+
+.container {
+  padding: 15px;
+}
+
+h1 {
+  font-size: 18px;
+  margin-top: 0;
+  color: #24292e;
+  border-bottom: 1px solid #e1e4e8;
+  padding-bottom: 10px;
+}
+
+.setting-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #24292e;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 14px;
+  line-height: 20px;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+button {
+  background-color: #2ea44f;
+  color: #fff;
+  border: 1px solid rgba(27, 31, 35, .15);
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: .2s;
+}
+
+button:hover {
+  background-color: #2c974b;
+}
+
+#save {
+  margin-top: 10px;
+}
+
+.jira-keys {
+  margin-top: 10px;
+}
+
+.key-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.remove-key {
+  background-color: #cb2431;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+.remove-key:hover {
+  background-color: #a21c29;
+}
+
+.key-input-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.key-input-group input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+#status {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #2ea44f;
+  font-style: italic;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Generator</title>
+  <style>
+    body {
+      padding: 20px;
+      font-family: sans-serif;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #2ea44f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>GitHub to JIRA Multi-KeyConnector Icon Generator</h1>
+  <div>
+    <canvas id="icon16" width="16" height="16"></canvas>
+    <canvas id="icon48" width="48" height="48"></canvas>
+    <canvas id="icon128" width="128" height="128"></canvas>
+  </div>
+  <p>Right-click each icon and choose "Save image as..." to save them as PNG files.</p>
+  <p>Save them as icon16.png, icon48.png, and icon128.png in the images folder.</p>
+
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#0052CC'; // JIRA blue color
+      ctx.fillRect(0, 0, size, size);
+
+      // Draw "J" in white
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${Math.floor(size * 0.7)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('J', size/2, size/2);
+
+      // Add a small GitHub-like symbol
+      const linkSize = Math.floor(size * 0.3);
+      ctx.beginPath();
+      ctx.arc(size * 0.75, size * 0.75, linkSize/2, 0, 2 * Math.PI);
+      ctx.fillStyle = '#24292e'; // GitHub color
+      ctx.fill();
+    }
+
+    // Draw icons of different sizes
+    drawIcon('icon16', 16);
+    drawIcon('icon48', 48);
+    drawIcon('icon128', 128);
+  </script>
+</body>
+</html>

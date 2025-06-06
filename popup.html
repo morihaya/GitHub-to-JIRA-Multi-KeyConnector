@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub to JIRA Multi-KeyConnector Settings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>GitHub to JIRA Multi-KeyConnector Settings</h1>
+
+    <div class="setting-group">
+      <label for="jira-url">JIRA URL:</label>
+      <input type="text" id="jira-url" placeholder="https://YOURORGNAME.atlassian.net/">
+    </div>
+
+    <div class="setting-group">
+      <label>JIRA Project Keys:</label>
+      <div class="jira-keys">
+        <div id="keys-container">
+          <!-- Keys will be added here dynamically -->
+        </div>
+        <div class="key-input-group">
+          <input type="text" id="new-key" placeholder="Add new key (e.g., PROJ)">
+          <button id="add-key">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="save">Save Settings</button>
+      <div id="status"></div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
