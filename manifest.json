@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GitHub to JIRA Multi-KeyConnector",
   "version": "1.0",
-  "description": "Automatically converts JIRA issue codes into clickable links on GitHub, allowing direct access to JIRA from the GitHub web interface. Supports multiple project keys.",
+  "description": "Converts JIRA issue codes into clickable links on GitHub for direct JIRA access. Supports multiple project keys.",
   "permissions": ["storage"],
   "host_permissions": ["https://github.com/*"],
   "action": {
