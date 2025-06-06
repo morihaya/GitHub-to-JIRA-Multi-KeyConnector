@@ -288,3 +288,12 @@ if (document.body) {
     });
   });
 }
+
+// Export functions for testing (will be ignored by the browser)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    convertJiraCodesInElement,
+    convertJiraCodes,
+    setupGitHubNavigationDetection
+  };
+}

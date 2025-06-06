@@ -1,5 +1,8 @@
 # GitHub to JIRA Multi-KeyConnector
 
+[![CI](https://github.com/morihaya/GitHub-to-JIRA-Multi-KeyConnector/actions/workflows/ci.yml/badge.svg)](https://github.com/morihaya/GitHub-to-JIRA-Multi-KeyConnector/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/morihaya/GitHub-to-JIRA-Multi-KeyConnector/branch/main/graph/badge.svg)](https://codecov.io/gh/morihaya/GitHub-to-JIRA-Multi-KeyConnector)
+
 A Microsoft Edge and Chrome extension that automatically converts JIRA issue codes (like PROJECT-123) to clickable links in GitHub Pull Request reviews and Issue pages. The extension enables one-way linking from GitHub to JIRA with support for multiple project keys.
 
 ## Features
@@ -28,6 +31,43 @@ A Microsoft Edge and Chrome extension that automatically converts JIRA issue cod
 
 - For production use, convert the SVG icons in the `/images` folder to PNG files
 - You can use the included `icon_generator.html` file to create proper PNG icons
+
+## Development
+
+### Prerequisites
+- Node.js (version 18 or higher)
+- npm (usually comes with Node.js)
+
+### Setup Development Environment
+
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npm run test` to run the tests
+4. Run `npm run test:coverage` to generate test coverage reports
+5. Run `npm run lint` to lint the code
+
+### Testing
+
+The project uses Jest for unit testing:
+
+- `npm run test` - Run all tests
+- `npm run test:coverage` - Run tests and generate coverage reports (found in the `/coverage` directory)
+
+Tests are organized in the `/tests` directory:
+- `content.test.js` - Tests for GitHub content page functionality
+- `popup.test.js` - Tests for extension popup functionality
+- `navigation.test.js` - Tests for GitHub page navigation detection
+- `popup_additional.test.js` - Additional tests for popup functionality
+- `mutation_observer.test.js` - Tests for dynamic content observation
+
+### Continuous Integration
+
+This project uses GitHub Actions for continuous integration:
+
+- Automated tests run on every push and pull request on Node.js 18.x and 20.x
+- Code quality is checked through ESLint
+- Test coverage reports are uploaded to Codecov
+- Build artifacts are generated on successful merges to main
 
 ## Troubleshooting
 
