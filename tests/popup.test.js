@@ -46,11 +46,11 @@ describe('popup.js functionality', () => {
 
     // Check if the UI is updated correctly
     expect(document.getElementById('jira-url').value).toBe('https://test.atlassian.net/');
-    
+
     // Check if keys were added to the container
     const keysContainer = document.getElementById('keys-container');
     expect(keysContainer.children.length).toBe(2);
-    
+
     // Check the content of the keys
     const keyElements = keysContainer.querySelectorAll('.key-item span');
     expect(keyElements[0].textContent).toBe('TEST');
@@ -60,7 +60,7 @@ describe('popup.js functionality', () => {
   test('saveSettings should save the current UI state', () => {
     // Set up the UI state
     document.getElementById('jira-url').value = 'https://new.atlassian.net/';
-    
+
     // Add keys to the container
     const keysContainer = document.getElementById('keys-container');
     keysContainer.innerHTML = `
@@ -94,7 +94,7 @@ describe('popup.js functionality', () => {
     // Check if the key was added to the container
     const keysContainer = document.getElementById('keys-container');
     expect(keysContainer.children.length).toBe(1);
-    
+
     // Check the content of the key
     const keyElement = keysContainer.querySelector('.key-item span');
     expect(keyElement.textContent).toBe('NEWKEY');
@@ -122,7 +122,7 @@ describe('popup.js functionality', () => {
 
     // Check if the alert was shown
     expect(window.alert).toHaveBeenCalledWith('This key already exists!');
-    
+
     // Check that no new key was added
     expect(keysContainer.children.length).toBe(1);
   });

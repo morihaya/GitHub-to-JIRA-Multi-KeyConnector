@@ -22,7 +22,7 @@ global.MutationObserver = class {
   constructor(callback) {
     this.callback = callback;
   }
-  
+
   observe() {}
   disconnect() {}
 };
