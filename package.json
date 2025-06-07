@@ -35,6 +35,10 @@
       "js"
     ],
     "transform": {},
+    "testEnvironmentOptions": {
+      "customExportConditions": ["node", "jsdom"]
+    },
+    "resetMocks": true,
     "coverageDirectory": "./coverage/",
     "collectCoverageFrom": [
       "content.js",

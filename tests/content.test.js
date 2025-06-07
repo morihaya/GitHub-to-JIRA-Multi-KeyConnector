@@ -13,8 +13,17 @@ describe('content.js functionality', () => {
       <div class="comment-body">This is a comment with ISSUE-456 reference</div>
     `;
 
-    // Reset mocks
-    resetMocks();
+    // Reset mocks directly
+    if (chrome && chrome.storage && chrome.storage.sync) {
+      if (chrome.storage.sync.get.mockReset) chrome.storage.sync.get.mockReset();
+      if (chrome.storage.sync.set.mockReset) chrome.storage.sync.set.mockReset();
+    }
+    if (chrome && chrome.runtime) {
+      chrome.runtime.lastError = null;
+    }
+    // Mock console methods
+    console.error = jest.fn();
+    console.log = jest.fn();
 
     // Re-import the script to reset its state
     jest.isolateModules(() => {

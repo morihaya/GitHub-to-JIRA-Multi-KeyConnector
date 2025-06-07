@@ -1,0 +1,111 @@
+/**
+ * @jest-environment jsdom
+ */
+
+describe('Mutation Observer functionality', () => {
+  // Import the functions from content.js
+  let contentScript;
+
+  beforeEach(() => {
+    // Reset document body for each test
+    document.body.innerHTML = `
+      <div id="test-container"></div>
+    `;
+
+    // Reset mocks
+    resetMocks();
+
+    // Mock the MutationObserver
+    global.MutationObserver = jest.fn(callback => {
+      return {
+        observe: jest.fn(),
+        disconnect: jest.fn(),
+        callback,
+        timeout: null
+      };
+    });
+
+    // Re-import the script to reset its state
+    jest.isolateModules(() => {
+      contentScript = require('../content');
+    });
+  });
+
+  test('MutationObserver is initialized when content is loaded', () => {
+    // Check if MutationObserver was initialized
+    expect(MutationObserver).toHaveBeenCalled();
+
+    // Get the created observer instance and use it directly in the test
+    const observerInstance = MutationObserver.mock.instances[0];
+
+    // Check if observe was called when body is available
+    expect(observerInstance.observe).toHaveBeenCalledWith(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+
+  test('MutationObserver calls convertJiraCodes when relevant nodes are added', () => {
+    // Mock the convertJiraCodes function
+    const convertJiracodesMock = jest.fn();
+    global.convertJiraCodes = convertJiracodesMock;
+
+    // Get the observer callback from the mock
+    const observerCallback = MutationObserver.mock.calls[0][0];
+
+    // Create a test node with a comment body
+    const testNode = document.createElement('div');
+    testNode.className = 'comment-body';
+    testNode.textContent = 'This is a test with PROJECT-123';
+
+    // Create a test mutation record
+    const mutationRecord = {
+      addedNodes: [testNode],
+      type: 'childList'
+    };
+
+    // Call the observer callback with the test mutation
+    observerCallback([mutationRecord]);
+
+    // Set up the clock to fake setTimeout
+    jest.useFakeTimers();
+
+    // Fast forward the timer to trigger the debounced function
+    jest.advanceTimersByTime(500);
+
+    // Check if convertJiraCodes was called
+    expect(convertJiracodesMock).toHaveBeenCalled();
+  });
+
+  test('MutationObserver does not call convertJiraCodes for irrelevant nodes', () => {
+    // Mock the convertJiraCodes function
+    const convertJiraCodes = jest.fn();
+    global.convertJiraCodes = convertJiraCodes;
+
+    // Get the observer callback
+    const observerCallback = MutationObserver.mock.calls[0][0];
+
+    // Create a test node that is NOT a comment body
+    const testNode = document.createElement('div');
+    testNode.className = 'not-a-comment';
+    testNode.textContent = 'This is not a comment with PROJECT-123';
+
+    // Create a test mutation record
+    const mutationRecord = {
+      addedNodes: [testNode],
+      type: 'childList'
+    };
+
+    // Call the observer callback with the test mutation
+    observerCallback([mutationRecord]);
+
+    // Set up the clock to fake setTimeout
+    jest.useFakeTimers();
+
+    // Fast forward the timer
+    jest.advanceTimersByTime(500);
+
+    // Check that convertJiraCodes was NOT called for irrelevant nodes
+    expect(convertJiraCodes).not.toHaveBeenCalled();
+  });
+});

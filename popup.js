@@ -44,18 +44,22 @@ function saveSettings() {
   const keyElements = document.querySelectorAll('.key-item span');
   const jiraKeys = Array.from(keyElements).map(span => span.textContent);
 
+  // Update status immediately to provide feedback
+  const status = document.getElementById('status');
+  status.textContent = 'Saving...';
+
   chrome.storage.sync.set({
     jiraUrl: jiraUrl,
     jiraKeys: jiraKeys
   }, function() {
     // エラーハンドリング
     if (chrome.runtime.lastError) {
-      console.log('保存時にエラーが発生しました:', chrome.runtime.lastError.message);
+      console.error('保存時にエラーが発生しました:', chrome.runtime.lastError.message);
+      status.textContent = 'Error saving settings!';
       return;
     }
 
     // Update status to let user know settings were saved
-    const status = document.getElementById('status');
     status.textContent = 'Settings saved.';
     setTimeout(function() {
       status.textContent = '';
@@ -99,4 +103,18 @@ function createKeyElement(key) {
 
   keyDiv.appendChild(deleteButton);
   return keyDiv;
+}
+
+// Export functions for testing (will be ignored by the browser)
+try {
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+      loadSettings,
+      saveSettings,
+      addKey,
+      createKeyElement
+    };
+  }
+} catch (e) {
+  // Ignore errors in browser environment where module may not be defined
 }

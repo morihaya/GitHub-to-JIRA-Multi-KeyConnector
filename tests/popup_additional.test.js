@@ -10,14 +10,26 @@ describe('popup.js additional functionality', () => {
     // Set up a simple DOM for testing
     document.body.innerHTML = `
       <div class="container">
+        <input type="text" id="jira-url" value="https://test.atlassian.net/">
         <div id="keys-container"></div>
         <input type="text" id="new-key" value="">
         <button id="add-key">Add</button>
+        <button id="save">Save Settings</button>
+        <div id="status"></div>
       </div>
     `;
 
-    // Reset mocks
-    resetMocks();
+    // Reset mocks directly without using resetMocks
+    if (chrome && chrome.storage && chrome.storage.sync) {
+      if (chrome.storage.sync.get.mockReset) chrome.storage.sync.get.mockReset();
+      if (chrome.storage.sync.set.mockReset) chrome.storage.sync.set.mockReset();
+    }
+    if (chrome && chrome.runtime) {
+      chrome.runtime.lastError = null;
+    }
+    // Mock console methods
+    console.error = jest.fn();
+    console.log = jest.fn();
 
     // Re-import the script to reset its state
     jest.isolateModules(() => {
@@ -72,7 +84,8 @@ describe('popup.js additional functionality', () => {
     // Set up Chrome runtime error
     chrome.runtime.lastError = { message: 'Test error' };
 
-    // Mock console.log
+    // Mock console methods
+    console.error = jest.fn();
     console.log = jest.fn();
 
     // Mock chrome.storage.sync.set to simulate an error
@@ -87,15 +100,15 @@ describe('popup.js additional functionality', () => {
     // Verify chrome.storage.sync.set was called
     expect(chrome.storage.sync.set).toHaveBeenCalled();
 
-    // Check if error was logged
-    expect(console.log).toHaveBeenCalledWith(
+    // Check if error was logged with console.error instead of console.log
+    expect(console.error).toHaveBeenCalledWith(
       expect.stringContaining('保存時にエラーが発生しました:'),
-      expect.any(Object)
+      expect.any(String)
     );
 
-    // The status should not be updated
+    // Check that the status element shows an error
     const status = document.getElementById('status');
-    expect(status).toBeNull(); // Since we didn't add it in the beforeEach setup
+    expect(status.textContent).toBe('Error saving settings!');
   });
 
   test('loadSettings handles storage error gracefully', () => {
@@ -122,10 +135,10 @@ describe('popup.js additional functionality', () => {
     // Verify chrome.storage.sync.get was called
     expect(chrome.storage.sync.get).toHaveBeenCalled();
 
-    // Check if error was logged
-    expect(console.log).toHaveBeenCalledWith(
+    // Check if error was logged - we changed from console.log to console.error
+    expect(console.error).toHaveBeenCalledWith(
       expect.stringContaining('設定の読み込み時にエラーが発生しました:'),
-      expect.any(Object)
+      expect.any(String)
     );
   });
 });

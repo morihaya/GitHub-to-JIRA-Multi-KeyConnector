@@ -1,6 +1,13 @@
+// File: content.js
+
 // Custom logger that can be disabled in production
 const logger = {
-  enabled: false, // Set to false to disable all console output in production
+  enabled: false, // Set to false to disable all console output  // GitHubのTurbolinks/pjax遷移を検知するMutationObserver
+  const navigationObserver = new MutationObserver(function() {
+    // URLが変わったかチェック
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      logger.debug('GitHub navigation detected to:', location.href);oduction
   debug: function(...args) {
     if (this.enabled) {
       console.debug(...args);

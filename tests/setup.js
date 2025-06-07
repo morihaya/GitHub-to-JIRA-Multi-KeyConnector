@@ -1,11 +1,3 @@
-// Set up Jest globals for all tests
-global.jest = jest;
-global.expect = expect;
-global.test = test;
-global.describe = describe;
-global.beforeEach = beforeEach;
-global.afterEach = afterEach;
-
 // Mock for Chrome extension API
 global.chrome = {
   storage: {
@@ -36,8 +28,13 @@ global.MutationObserver = class {
 };
 
 // Helper to reset mocks between tests
-global.resetMocks = () => {
-  chrome.storage.sync.get.mockReset();
-  chrome.storage.sync.set.mockReset();
-  chrome.runtime.lastError = null;
+global.resetMocks = function() {
+  if (chrome && chrome.storage && chrome.storage.sync) {
+    if (chrome.storage.sync.get.mockReset) chrome.storage.sync.get.mockReset();
+    if (chrome.storage.sync.set.mockReset) chrome.storage.sync.set.mockReset();
+  }
+  if (chrome && chrome.runtime) {
+    chrome.runtime.lastError = null;
+  }
+  jest.restoreAllMocks();
 };

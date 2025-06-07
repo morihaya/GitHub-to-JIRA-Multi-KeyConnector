@@ -19,8 +19,17 @@ describe('popup.js functionality', () => {
       </div>
     `;
 
-    // Reset mocks
-    resetMocks();
+    // Reset mocks directly
+    if (chrome && chrome.storage && chrome.storage.sync) {
+      if (chrome.storage.sync.get.mockReset) chrome.storage.sync.get.mockReset();
+      if (chrome.storage.sync.set.mockReset) chrome.storage.sync.set.mockReset();
+    }
+    if (chrome && chrome.runtime) {
+      chrome.runtime.lastError = null;
+    }
+    // Mock console methods
+    console.error = jest.fn();
+    console.log = jest.fn();
 
     // Re-import the script to reset its state
     jest.isolateModules(() => {
@@ -78,8 +87,15 @@ describe('popup.js functionality', () => {
       jiraKeys: ['KEY1', 'KEY2']
     }, expect.any(Function));
 
-    // Check if the status was updated
+    // Check if the status was initially updated to "Saving..."
     const status = document.getElementById('status');
+    expect(status.textContent).toBe('Saving...');
+
+    // Trigger the callback to simulate completion
+    const setCallback = chrome.storage.sync.set.mock.calls[0][1];
+    setCallback();
+
+    // Now it should be updated to "Settings saved."
     expect(status.textContent).toBe('Settings saved.');
   });
 
