@@ -1,3 +1,25 @@
+// File: content.js
+
+// Custom logger that can be disabled in production
+const logger = {
+  enabled: false, // Set to false to disable all console output  // GitHubのTurbolinks/pjax遷移を検知するMutationObserver
+  const navigationObserver = new MutationObserver(function() {
+    // URLが変わったかチェック
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      logger.debug('GitHub navigation detected to:', location.href);oduction
+  debug: function(...args) {
+    if (this.enabled) {
+      console.debug(...args);
+    }
+  },
+  error: function(...args) {
+    if (this.enabled) {
+      console.error(...args);
+    }
+  }
+};
+
 // Function to convert JIRA issue codes to links
 function convertJiraCodesInElement(element, jiraUrl, jiraKeys) {
   if (!element || !jiraKeys || jiraKeys.length === 0) return;
@@ -81,7 +103,7 @@ function convertJiraCodes() {
   }, function(items) {
     // エラーハンドリングを追加
     if (chrome.runtime.lastError) {
-      console.debug('設定の取得中にエラーが発生しました:', chrome.runtime.lastError.message);
+      logger.debug('設定の取得中にエラーが発生しました:', chrome.runtime.lastError.message);
       return;
     }
 
@@ -135,18 +157,18 @@ function setupGitHubNavigationDetection() {
   let lastUrl = location.href;
 
   // GitHubのTurbolinks/pjax遷移を検知するMutationObserver
-  const navigationObserver = new MutationObserver(function(mutations) {
+  const navigationObserver = new MutationObserver(function(_mutations) {
     // URLが変わったかチェック
     if (location.href !== lastUrl) {
       lastUrl = location.href;
-      console.debug('GitHub navigation detected to:', location.href);
+      logger.debug('GitHub navigation detected to:', location.href);
 
       // ページ遷移を検知したらコード変換を実行（少し遅延させて実行）
       setTimeout(function() {
         try {
           convertJiraCodes();
         } catch (e) {
-          console.debug('Navigation conversion failed:', e);
+          logger.debug('Navigation conversion failed:', e);
         }
       }, 300);
 
@@ -168,14 +190,14 @@ function setupGitHubNavigationDetection() {
     originalPushState.apply(this, arguments);
 
     // pushStateが実行された（内部遷移した）
-    console.debug('History pushState detected');
+    logger.debug('History pushState detected');
     setTimeout(convertJiraCodes, 300);
     setTimeout(convertJiraCodes, 800);
   };
 
   // 戻る・進むボタン対応
   window.addEventListener('popstate', function() {
-    console.debug('History popstate detected');
+    logger.debug('History popstate detected');
     setTimeout(convertJiraCodes, 300);
     setTimeout(convertJiraCodes, 800);
   });
@@ -191,12 +213,12 @@ setTimeout(function() {
   try {
     // ドキュメントの準備ができているか確認
     if (document.readyState === 'loading') {
-      console.debug('ドキュメントがまだロード中です。後で再試行します。');
+      logger.debug('ドキュメントがまだロード中です。後で再試行します。');
       return; // 後のイベントで処理される
     }
     convertJiraCodes();
   } catch (e) {
-    console.debug('Early conversion attempt failed:', e);
+    logger.debug('Early conversion attempt failed:', e);
   }
 }, 0);
 
@@ -206,13 +228,13 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     convertJiraCodes();
     setTimeout(function() {
-      try { convertJiraCodes(); } catch(e) { console.debug('DOMContentLoaded+300ms error:', e); }
+      try { convertJiraCodes(); } catch(e) { logger.debug('DOMContentLoaded+300ms error:', e); }
     }, 300);
     setTimeout(function() {
-      try { convertJiraCodes(); } catch(e) { console.debug('DOMContentLoaded+800ms error:', e); }
+      try { convertJiraCodes(); } catch(e) { logger.debug('DOMContentLoaded+800ms error:', e); }
     }, 800);
   } catch(e) {
-    console.debug('DOMContentLoaded execution error:', e);
+    logger.debug('DOMContentLoaded execution error:', e);
   }
 });
 
@@ -223,13 +245,13 @@ window.addEventListener('load', function() {
 
   // GitHubのTurbolinksなどの動的ページ遷移後のために、複数回の遅延実行を行う
   setTimeout(function() {
-    try { convertJiraCodes(); } catch(e) { console.debug('Load+500ms error:', e); }
+    try { convertJiraCodes(); } catch(e) { logger.debug('Load+500ms error:', e); }
   }, 500);
   setTimeout(function() {
-    try { convertJiraCodes(); } catch(e) { console.debug('Load+1500ms error:', e); }
+    try { convertJiraCodes(); } catch(e) { logger.debug('Load+1500ms error:', e); }
   }, 1500);
   setTimeout(function() {
-    try { convertJiraCodes(); } catch(e) { console.debug('Load+3000ms error:', e); }
+    try { convertJiraCodes(); } catch(e) { logger.debug('Load+3000ms error:', e); }
   }, 3000);
 });
 
@@ -290,10 +312,15 @@ if (document.body) {
 }
 
 // Export functions for testing (will be ignored by the browser)
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    convertJiraCodesInElement,
-    convertJiraCodes,
-    setupGitHubNavigationDetection
-  };
+// Support for testing with Jest
+try {
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+      convertJiraCodesInElement,
+      convertJiraCodes,
+      setupGitHubNavigationDetection
+    };
+  }
+} catch (e) {
+  // Ignore errors in browser environment where module may not be defined
 }

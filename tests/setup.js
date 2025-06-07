@@ -1,3 +1,11 @@
+// Set up Jest globals for all tests
+global.jest = jest;
+global.expect = expect;
+global.test = test;
+global.describe = describe;
+global.beforeEach = beforeEach;
+global.afterEach = afterEach;
+
 // Mock for Chrome extension API
 global.chrome = {
   storage: {

@@ -20,7 +20,8 @@ function loadSettings() {
   }, function(items) {
     // エラーハンドリング
     if (chrome.runtime.lastError) {
-      console.log('設定の読み込み時にエラーが発生しました:', chrome.runtime.lastError.message);
+      // Use console.error for critical issues
+      console.error('設定の読み込み時にエラーが発生しました:', chrome.runtime.lastError.message);
       return;
     }
 

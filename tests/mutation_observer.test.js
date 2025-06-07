@@ -2,6 +2,17 @@
  * @jest-environment jsdom
  */
 
+// Define resetMocks function locally if not available in global scope
+function resetMocks() {
+  if (chrome && chrome.storage && chrome.storage.sync) {
+    chrome.storage.sync.get.mockReset && chrome.storage.sync.get.mockReset();
+    chrome.storage.sync.set.mockReset && chrome.storage.sync.set.mockReset();
+  }
+  if (chrome && chrome.runtime) {
+    chrome.runtime.lastError = null;
+  }
+}
+
 describe('Mutation Observer functionality', () => {
   // Import the functions from content.js
   let contentScript;
@@ -35,16 +46,15 @@ describe('Mutation Observer functionality', () => {
     // Check if MutationObserver was initialized
     expect(MutationObserver).toHaveBeenCalled();
 
-    // Get the created observer instance
+    // Get the created observer instance and use it directly in the test
     const observerInstance = MutationObserver.mock.instances[0];
 
     // Check if observe was called when body is available
-    if (document.body) {
-      expect(observerInstance.observe).toHaveBeenCalledWith(document.body, {
-        childList: true,
-        subtree: true
-      });
-    }
+    // We should always expect this as we're setting up the document.body in beforeEach
+    expect(observerInstance.observe).toHaveBeenCalledWith(document.body, {
+      childList: true,
+      subtree: true
+    });
   });
 
   test('MutationObserver calls convertJiraCodes when relevant nodes are added', () => {
@@ -52,8 +62,7 @@ describe('Mutation Observer functionality', () => {
     const convertJiraCodes = jest.fn();
     contentScript.convertJiraCodes = convertJiraCodes;
 
-    // Get the created observer instance and its callback
-    const observerInstance = MutationObserver.mock.instances[0];
+    // Get the observer callback from the mock
     const observerCallback = MutationObserver.mock.calls[0][0];
 
     // Create a test node with a comment body

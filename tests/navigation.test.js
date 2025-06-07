@@ -1,6 +1,17 @@
 /**
  * @jest-environment jsdom
  */
+// Import the resetMocks function if not available globally
+const resetMocks = global.resetMocks || (() => {
+  // Fallback implementation if not available
+  if (chrome && chrome.storage && chrome.storage.sync) {
+    chrome.storage.sync.get.mockReset && chrome.storage.sync.get.mockReset();
+    chrome.storage.sync.set.mockReset && chrome.storage.sync.set.mockReset();
+  }
+  if (chrome && chrome.runtime) {
+    chrome.runtime.lastError = null;
+  }
+});
 
 describe('GitHub navigation detection', () => {
   // Import the functions from content.js
