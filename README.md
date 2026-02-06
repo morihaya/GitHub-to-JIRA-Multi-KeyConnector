@@ -60,6 +60,16 @@ Tests are organized in the `/tests` directory:
 - `popup_additional.test.js` - Additional tests for popup functionality
 - `mutation_observer.test.js` - Tests for dynamic content observation
 
+### Building for Release
+
+To create a zip file for uploading to the Chrome Web Store or Edge Add-ons:
+
+```bash
+npm run zip
+```
+
+This creates `extension.zip` containing only the files needed for the extension (manifest.json, content.js, popup.html, popup.js, styles.css, images/).
+
 ### Continuous Integration
 
 This project uses GitHub Actions for continuous integration:
