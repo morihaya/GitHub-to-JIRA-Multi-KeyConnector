@@ -17,6 +17,14 @@ A Microsoft Edge and Chrome extension that automatically converts JIRA issue cod
 
 ## Setup Instructions
 
+### From Chrome Web Store / Edge Add-ons
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/github-to-jira-multi-keyc/jcmhinjfpbbgedjihmnnmhlbfegjbjag)
+- [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/github-to-jira-multikeyc/jomdbpolcnklhpkompngkjflgallklom)
+
+
+### Developer Mode Installation
+
 1. Load the extension in Microsoft Edge:
    - Open Edge and navigate to `edge://extensions/`
    - Enable "Developer mode" using the toggle in the bottom-left corner
