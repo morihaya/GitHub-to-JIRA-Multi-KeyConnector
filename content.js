@@ -112,6 +112,12 @@ function convertJiraCodes() {
       convertJiraCodesInElement(title, items.jiraUrl, items.jiraKeys);
     });
 
+    // Process Issue/PR list page titles (markdown-title class)
+    const listTitles = document.querySelectorAll('.markdown-title');
+    listTitles.forEach(title => {
+      convertJiraCodesInElement(title, items.jiraUrl, items.jiraKeys);
+    });
+
     // Process all comment bodies (works for both PR and Issues)
     const commentBodies = document.querySelectorAll('.comment-body, .js-comment-body');
     commentBodies.forEach(body => {
@@ -265,14 +271,15 @@ const observer = new MutationObserver(function(mutations) {
           const node = mutation.addedNodes[j];
           if (node.nodeType === Node.ELEMENT_NODE) {
             // Check for comment elements that might contain JIRA codes
-            const hasComments = node.querySelector('.comment-body, .review-comment-body, .js-comment-body, .js-issue-body, .gh-header-title, .timeline-comment-wrapper');
+            const hasComments = node.querySelector('.comment-body, .review-comment-body, .js-comment-body, .js-issue-body, .gh-header-title, .timeline-comment-wrapper, .markdown-title');
             if (hasComments ||
                 node.classList.contains('comment-body') ||
                 node.classList.contains('review-comment-body') ||
                 node.classList.contains('js-comment-body') ||
                 node.classList.contains('js-issue-body') ||
                 node.classList.contains('gh-header-title') ||
-                node.classList.contains('js-issue-title')) {
+                node.classList.contains('js-issue-title') ||
+                node.classList.contains('markdown-title')) {
               shouldConvert = true;
               break;
             }

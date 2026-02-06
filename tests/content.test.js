@@ -11,6 +11,7 @@ describe('content.js functionality', () => {
     document.body.innerHTML = `
       <div class="js-issue-title">Test PR Title with PROJECT-123</div>
       <div class="comment-body">This is a comment with ISSUE-456 reference</div>
+      <span class="markdown-title">PFE-572 Client list名を短くする</span>
     `;
 
     // Reset mocks directly
@@ -87,6 +88,28 @@ describe('content.js functionality', () => {
     const commentLinks = document.querySelector('.comment-body').querySelectorAll('a');
     expect(commentLinks.length).toBe(1);
     expect(commentLinks[0].href).toBe('https://test.atlassian.net/browse/ISSUE-456');
+  });
+
+  test('convertJiraCodes processes markdown-title elements in Issue/PR list pages', () => {
+    // Mock the chrome.storage.sync.get function to return settings
+    chrome.storage.sync.get.mockImplementation((defaults, callback) => {
+      callback({
+        jiraUrl: 'https://test.atlassian.net/',
+        jiraKeys: ['PROJECT', 'ISSUE', 'PFE']
+      });
+    });
+
+    // Get the function from the module exports or global scope
+    const convertJiraCodes = contentScript?.convertJiraCodes || window.convertJiraCodes;
+
+    // Call the function
+    convertJiraCodes();
+
+    // Verify that links were created in markdown-title element
+    const markdownTitleLinks = document.querySelector('.markdown-title').querySelectorAll('a');
+    expect(markdownTitleLinks.length).toBe(1);
+    expect(markdownTitleLinks[0].href).toBe('https://test.atlassian.net/browse/PFE-572');
+    expect(markdownTitleLinks[0].textContent).toBe('PFE-572');
   });
 
   test('convertJiraCodes handles storage error gracefully', () => {
