@@ -5,6 +5,9 @@
 
 A Microsoft Edge and Chrome extension that automatically converts JIRA issue codes (like PROJECT-123) to clickable links in GitHub Pull Request reviews and Issue pages. The extension enables one-way linking from GitHub to JIRA with support for multiple project keys.
 
+![Screenshot](store-assets/screenshots/screenshot-01.png)
+![Screenshot](store-assets/screenshots/screenshot-02.png)
+
 ## Features
 
 - Converts JIRA issue codes to clickable links in GitHub Pull Request and Issue pages
