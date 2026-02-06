@@ -8,7 +8,8 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint .",
     "build": "echo \"Build script would go here\"",
-    "format": "prettier --write \"**/*.{js,json,html,css,md}\""
+    "format": "prettier --write \"**/*.{js,json,html,css,md}\"",
+    "zip": "zip -r extension.zip manifest.json content.js popup.html popup.js styles.css images/ -x '*.DS_Store'"
   },
   "keywords": [
     "jira",
