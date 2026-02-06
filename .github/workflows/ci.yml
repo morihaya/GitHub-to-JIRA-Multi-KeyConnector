@@ -65,7 +65,7 @@ jobs:
         zip -r ../github-to-jira-multi-keyconnector.zip *
 
     - name: Upload extension artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: extension-package
         path: github-to-jira-multi-keyconnector.zip
