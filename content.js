@@ -321,6 +321,6 @@ try {
       setupGitHubNavigationDetection
     };
   }
-} catch (e) {
+} catch (_e) {
   // Ignore errors in browser environment where module may not be defined
 }
