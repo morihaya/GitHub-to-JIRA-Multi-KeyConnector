@@ -27,30 +27,13 @@ describe('GitHub navigation detection', () => {
     // Reset mocks
     resetMocks();
 
-    // Save original History API methods
-    global.originalPushState = history.pushState;
-    global.originalAddEventListener = window.addEventListener;
-
-    // Mock history.pushState
-    history.pushState = jest.fn();
-
     // Re-import the script to reset its state
     jest.isolateModules(() => {
       contentScript = require('../content');
     });
   });
 
-  afterEach(() => {
-    // Restore original History API methods
-    if (global.originalPushState) {
-      history.pushState = global.originalPushState;
-    }
-    if (global.originalAddEventListener) {
-      window.addEventListener = global.originalAddEventListener;
-    }
-  });
-
-  test('setupGitHubNavigationDetection sets up mutation observer', () => {
+  test('setupGitHubNavigationDetection sets up mutation observer on the document', () => {
     // Get the function from the module exports
     const setupGitHubNavigationDetection = contentScript?.setupGitHubNavigationDetection;
 
@@ -67,17 +50,6 @@ describe('GitHub navigation detection', () => {
     });
   });
 
-  test('setupGitHubNavigationDetection overrides history.pushState', () => {
-    // Get the function from the module exports
-    const setupGitHubNavigationDetection = contentScript?.setupGitHubNavigationDetection;
-
-    // Call the function
-    setupGitHubNavigationDetection();
-
-    // Check if history.pushState was overridden
-    expect(history.pushState).not.toBe(global.originalPushState);
-  });
-
   test('setupGitHubNavigationDetection adds popstate event listener', () => {
     // Mock window.addEventListener
     const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
@@ -90,5 +62,20 @@ describe('GitHub navigation detection', () => {
 
     // Check if popstate event listener was added
     expect(addEventListenerSpy).toHaveBeenCalledWith('popstate', expect.any(Function));
+  });
+
+  test('setupGitHubNavigationDetection listens for Turbo/pjax page loads', () => {
+    // Mock document.addEventListener
+    const addEventListenerSpy = jest.spyOn(document, 'addEventListener');
+
+    // Get the function from the module exports
+    const setupGitHubNavigationDetection = contentScript?.setupGitHubNavigationDetection;
+
+    // Call the function
+    setupGitHubNavigationDetection();
+
+    // Check if Turbo/pjax event listeners were added
+    expect(addEventListenerSpy).toHaveBeenCalledWith('turbo:load', expect.any(Function));
+    expect(addEventListenerSpy).toHaveBeenCalledWith('pjax:end', expect.any(Function));
   });
 });

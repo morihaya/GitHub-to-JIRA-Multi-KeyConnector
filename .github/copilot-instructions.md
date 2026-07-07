@@ -19,11 +19,11 @@
 
 | 変更内容 | 対象テストファイル |
 |---------|-------------------|
-| JIRA コード変換ロジックの変更 | `tests/content.test.js` |
-| 新しいセレクタの追加 | `tests/content.test.js` |
-| MutationObserver関連の変更 | `tests/mutation_observer.test.js` |
-| ページナビゲーション関連の変更 | `tests/navigation.test.js` |
-| ポップアップUI関連の変更 | `tests/popup.test.js`, `tests/popup_additional.test.js` |
+| JIRA コード変換ロジックの変更 | `test/content.test.js` |
+| 新しいセレクタの追加 | `test/content.test.js` |
+| MutationObserver関連の変更 | `test/mutation_observer.test.js` |
+| ページナビゲーション関連の変更 | `test/navigation.test.js` |
+| ポップアップUI関連の変更 | `test/popup.test.js`, `test/popup_additional.test.js` |
 
 ### 3. テストの実行
 
@@ -39,7 +39,7 @@ npm test
 
 1. `content.js` の `convertJiraCodes()` 関数内に新しいセレクタを追加
 2. `content.js` の MutationObserver のセレクタリストにも同じクラスを追加
-3. `tests/content.test.js` の `beforeEach` で新しい要素をDOMに追加
+3. `test/content.test.js` の `beforeEach` で新しい要素をDOMに追加
 4. 新しいテストケースを追加して動作を検証
 
 ### 例：markdown-title サポートの追加時
