@@ -1,6 +1,6 @@
 {
   "name": "github-to-jira-multi-keyconnector",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A Microsoft Edge and Chrome extension that automatically converts JIRA issue codes to clickable links in GitHub.",
   "main": "content.js",
   "type": "module",
@@ -8,9 +8,9 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "eslint .",
-    "build": "echo \"Build script would go here\"",
+    "build": "./build-extension.sh",
     "format": "prettier --write \"**/*.{js,json,html,css,md}\"",
-    "zip": "zip -r extension.zip manifest.json content.js popup.html popup.js styles.css images/ -x '*.DS_Store'"
+    "zip": "npm run build"
   },
   "keywords": [
     "jira",
@@ -33,7 +33,7 @@
   "jest": {
     "testEnvironment": "jsdom",
     "setupFiles": [
-      "./tests/setup.js"
+      "./test/setup.js"
     ],
     "moduleFileExtensions": [
       "js"

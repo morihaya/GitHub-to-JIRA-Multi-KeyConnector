@@ -40,7 +40,7 @@ A Microsoft Edge and Chrome extension that automatically converts JIRA issue cod
 
 ## Notes for Production Use
 
-- For production use, convert the SVG icons in the `/images` folder to PNG files
+- For production use, convert the SVG icons in the `/icons` folder to PNG files
 - You can use the included `icon_generator.html` file to create proper PNG icons
 
 ## Development
@@ -64,22 +64,37 @@ The project uses Jest for unit testing:
 - `npm run test` - Run all tests
 - `npm run test:coverage` - Run tests and generate coverage reports (found in the `/coverage` directory)
 
-Tests are organized in the `/tests` directory:
+Tests are organized in the `/test` directory:
 - `content.test.js` - Tests for GitHub content page functionality
 - `popup.test.js` - Tests for extension popup functionality
 - `navigation.test.js` - Tests for GitHub page navigation detection
 - `popup_additional.test.js` - Additional tests for popup functionality
 - `mutation_observer.test.js` - Tests for dynamic content observation
 
+### File Structure
+
+```text
+.
+├── manifest.json       # Extension configuration (Manifest V3)
+├── content.js          # GitHub page script
+├── popup.html          # Extension popup UI
+├── popup.js            # Popup behavior and storage handling
+├── style.css           # Popup styling
+├── icons/              # Extension icons
+├── test/               # Jest test suite
+├── build-extension.sh  # Chrome/Edge package build script
+└── store-assets/       # Store listing assets
+```
+
 ### Building for Release
 
 To create a zip file for uploading to the Chrome Web Store or Edge Add-ons:
 
 ```bash
-npm run zip
+npm run build
 ```
 
-This creates `extension.zip` containing only the files needed for the extension (manifest.json, content.js, popup.html, popup.js, styles.css, images/).
+This creates Chrome and Edge zip packages in `dist/` containing only the files needed for the extension (`manifest.json`, `content.js`, `popup.html`, `popup.js`, `style.css`, `icons/`).
 
 ### Continuous Integration
 

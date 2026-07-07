@@ -23,7 +23,7 @@ export default [
     },
   },
   {
-    files: ["tests/**/*.js"],
+    files: ["test/**/*.js"],
     ...jest.configs["flat/recommended"],
     languageOptions: {
       globals: {
