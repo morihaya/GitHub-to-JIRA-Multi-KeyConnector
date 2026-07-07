@@ -12,6 +12,8 @@ describe('content.js functionality', () => {
       <div class="js-issue-title">Test PR Title with PROJECT-123</div>
       <div class="comment-body">This is a comment with ISSUE-456 reference</div>
       <span class="markdown-title">PFE-572 Client list名を短くする</span>
+      <bdi data-testid="issue-title">PROJECT-789 New React UI issue title</bdi>
+      <div data-testid="issue-body"><div class="markdown-body">Body references ISSUE-101</div></div>
     `;
 
     // Reset mocks directly
@@ -110,6 +112,59 @@ describe('content.js functionality', () => {
     expect(markdownTitleLinks.length).toBe(1);
     expect(markdownTitleLinks[0].href).toBe('https://test.atlassian.net/browse/PFE-572');
     expect(markdownTitleLinks[0].textContent).toBe('PFE-572');
+  });
+
+  test('convertJiraCodes processes the new React UI (data-testid) elements', () => {
+    // Mock the chrome.storage.sync.get function to return settings
+    chrome.storage.sync.get.mockImplementation((defaults, callback) => {
+      callback({
+        jiraUrl: 'https://test.atlassian.net/',
+        jiraKeys: ['PROJECT', 'ISSUE']
+      });
+    });
+
+    // Get the function from the module exports or global scope
+    const convertJiraCodes = contentScript?.convertJiraCodes || window.convertJiraCodes;
+
+    // Call the function
+    convertJiraCodes();
+
+    // Verify links were created in the new issue title element
+    const titleLinks = document.querySelector('[data-testid="issue-title"]').querySelectorAll('a');
+    expect(titleLinks.length).toBe(1);
+    expect(titleLinks[0].href).toBe('https://test.atlassian.net/browse/PROJECT-789');
+
+    // Verify links were created in the new issue body element
+    const bodyLinks = document.querySelector('[data-testid="issue-body"]').querySelectorAll('a');
+    expect(bodyLinks.length).toBe(1);
+    expect(bodyLinks[0].href).toBe('https://test.atlassian.net/browse/ISSUE-101');
+  });
+
+  test('convertJiraCodesInElement does not rewrite text inside existing links', () => {
+    const element = document.createElement('div');
+    element.innerHTML = '<a href="https://example.com">PROJECT-123</a> and PROJECT-456';
+
+    const convertJiraCodesInElement = contentScript?.convertJiraCodesInElement || window.convertJiraCodesInElement;
+    convertJiraCodesInElement(element, 'https://example.atlassian.net/', ['PROJECT']);
+
+    // The existing link must be untouched; only the plain text is converted
+    const links = element.querySelectorAll('a');
+    expect(links.length).toBe(2);
+    expect(links[0].href).toBe('https://example.com/');
+    expect(links[1].href).toBe('https://example.atlassian.net/browse/PROJECT-456');
+  });
+
+  test('convertJiraCodesInElement does not match keys embedded in longer words', () => {
+    const element = document.createElement('div');
+    element.textContent = 'MYPROJECT-123 should not link but PROJECT-123 should';
+
+    const convertJiraCodesInElement = contentScript?.convertJiraCodesInElement || window.convertJiraCodesInElement;
+    convertJiraCodesInElement(element, 'https://example.atlassian.net/', ['PROJECT']);
+
+    const links = element.querySelectorAll('a');
+    expect(links.length).toBe(1);
+    expect(links[0].href).toBe('https://example.atlassian.net/browse/PROJECT-123');
+    expect(element.textContent).toContain('MYPROJECT-123');
   });
 
   test('convertJiraCodes handles storage error gracefully', () => {

@@ -63,10 +63,11 @@ describe('Mutation Observer functionality', () => {
     // Check if MutationObserver was initialized
     expect(MutationObserver).toHaveBeenCalled();
 
-    // Check if observe was called with document.body
-    expect(MutationObserver.prototype.observe).toHaveBeenCalledWith(document.body, {
-      childList: true,
-      subtree: true
+    // Check if observe was called with the document (single observer handles
+    // both navigation detection and dynamically loaded content)
+    expect(MutationObserver.prototype.observe).toHaveBeenCalledWith(document, {
+      subtree: true,
+      childList: true
     });
   });
 });
